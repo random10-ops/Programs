@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int minStringValue(string str, int k) {
+    if (k >= str.length()) return 0;
+    
+    unordered_map<char, int> freqMap;
+    for (char ch : str) {
+        freqMap[ch]++;
+    }
+    
+    vector<int> freqList;
+    for (auto it : freqMap) {
+        freqList.push_back(it.second);
+    }
+    
+    sort(freqList.rbegin(), freqList.rend());
+    stack<int> freqStack;
+    for (int f : freqList) {
+        freqStack.push(f);
+    }
+    
+    while (k > 0 && !freqStack.empty()) {
+        int maxFreq = freqStack.top();
+        freqStack.pop();
+        maxFreq--;
+        if (maxFreq > 0) {
+            freqStack.push(maxFreq);
+        }
+        k--;
+    }
+    
+    int minSum = 0;
+    while (!freqStack.empty()) {
+        int f = freqStack.top();
+        freqStack.pop();
+        minSum += f * f;
+    }
+    
+    return minSum;
+}
+
+int main() {
+    string str = "aaab";
+    int k = 2;
+    cout << "Minimum sum of squares: " << minStringValue(str, k) << endl;
+    return 0;
+}
